@@ -6,7 +6,7 @@ import time
 AIO_USERNAME = "duy1711ak"
 AIO_KEY = "aio_wSsJ61gqapOCi1uvfve5DTHJtc3N"
 AIO_FEED = ["iot-alarm", "iot-door", "iot-gas", "iot-secu", "iot-humi",
-            "iot-temp", "iot-light", "iot-lightsys", "iot-switchlight"]
+            "iot-temp", "iot-light", "iot-lightsys", "iot-switchlight", "alarmcontroller"]
 
 
 def connected(client):
@@ -38,7 +38,9 @@ def message(client, feed_id, payload):
             ser.write(('light' + str(payload) + "#").encode())
         elif (feed_id == "iot-lightsys"):
             ser.write(('lsys' + str(payload) + "#").encode())
-
+        elif (feed_id == 'alarmcontroller'):
+            if (payload == '1'):
+                ser.write(('a0' + '#').encode())
 
 def getPort():
     ports = serial.tools.list_ports.comports()
@@ -104,7 +106,7 @@ def readSerial():
 
 isMicrobitConnected = False
 if (getPort() != None):
-    ser = serial.Serial(port='COM3', baudrate=115200)
+    ser = serial.Serial(port= getPort(), baudrate=115200)
     isMicrobitConnected = True
 time.sleep(2)
 ser.write(('s#').encode())
